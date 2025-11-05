@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { db } from "../db";
+import { authVerify } from "../auth";
 
 export default async function patientRoute(app: FastifyInstance) {
   app.get("/:hn", async (req, reply) => {
@@ -12,10 +13,10 @@ export default async function patientRoute(app: FastifyInstance) {
     if (!patient) return reply.code(404).send({ message: "Patient not found" });
     return patient;
   });
+
   //  select all records
-   app.get("/", async (_req, reply) => {
-    const patient = await db("patient")
-      .select("hn","pname","fname","lname");
+  app.get("/", { preHandler: authVerify }, async (_req, reply) => {
+    const patient = await db("patient").select("hn", "pname", "fname", "lname");
     if (!patient) return reply.code(404).send({ message: "Patient not found" });
     return patient;
   });

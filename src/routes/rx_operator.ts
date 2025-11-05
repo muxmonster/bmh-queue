@@ -10,7 +10,7 @@ export default async function rxOperatorRoute(app: FastifyInstance) {
       .leftJoin("patient as p", "o.hn", "p.hn")
       .select(
         "r.vn",
-        "r.prepare",
+        "r.prepare_rx",
         "o.hn",
         "o.oqueue",
         "p.pname",
@@ -18,6 +18,7 @@ export default async function rxOperatorRoute(app: FastifyInstance) {
         "p.lname"
       )
       .where("r.vn", vn)
+      .where("r.prepare_rx","Y")
       .first();
 
     if (!status)
